@@ -1,11 +1,7 @@
-﻿using PiggyScaleApi.Models;
-
-
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using PiggyScaleApi.DTOs;
 using PiggyScaleApi.DTOs.UserDto;
 using PiggyScaleApi.Repositories;
 
@@ -13,7 +9,7 @@ namespace PiggyScaleApi.Services;
 
 using System;
 using System.Threading.Tasks;
-using PiggyScaleApi.Models;
+using Models;
 
 public class UserService
 {
@@ -21,7 +17,7 @@ public class UserService
     private readonly UserRepository _userRepository;
     private readonly IConfiguration _configuration;
     private readonly String _tokenSecret;
-    private static readonly TimeSpan tokenLifetime = TimeSpan.FromHours(24);
+    private static readonly TimeSpan _tokenLifetime = TimeSpan.FromHours(24);
 
     public UserService(ApplicationContext context, IConfiguration configuration)
     {
@@ -57,12 +53,10 @@ public class UserService
     {
         string? usernameClaim;
         string? passwordClaim;
-        string? idClaim;
         try
         {
             usernameClaim = context.Claims.FirstOrDefault(c => c.Type == "userName").Value;
             passwordClaim = context.Claims.FirstOrDefault(c => c.Type == "userPassword").Value;
-            //idClaim = context.Claims.FirstOrDefault(c => c.Type == "userId").Value;
         } catch (Exception e)
         {
             Console.WriteLine(e.Message);
@@ -102,7 +96,7 @@ public class UserService
         SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.Add(tokenLifetime),
+            Expires = DateTime.UtcNow.Add(_tokenLifetime),
             Issuer = _configuration["JWT_SETTINGS_ISSUER"],
             Audience = _configuration["JWT_SETTINGS_AUDIENCE"],
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)

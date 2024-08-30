@@ -12,7 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Data.Sqlite;
+using Microsoft.OpenApi.Models;
 using Project.Hubs;
+using Swashbuckle.AspNetCore.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,16 +56,42 @@ builder.Services.AddAuthentication(x =>
 }));
 builder.Services.AddAuthorizationCore();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "PiggyScaleApi",
+        Description = "Persistent Data Storage for PiggyScale",
+        TermsOfService = new Uri("https://github.com/Altishofer/piggyScale-Server"),
+        Contact = new OpenApiContact
+        {
+            Name = "Sandrin Hunkeler",
+            Email = "sandrin@hunkeler.ws",
+            Url = new Uri("https://github.com/Altishofer"),
+        },
+        License = new OpenApiLicense
+        {
+            Name = "PragimTech Open License",
+            Url = new Uri("https://pragimtech.com"),
+        }
+    });
+});
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Employee API V1");
+        c.RoutePrefix = "swagger";
+    });
 }
+
+
 
 using var scope = app.Services.CreateScope();
 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();

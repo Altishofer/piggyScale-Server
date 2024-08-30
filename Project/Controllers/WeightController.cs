@@ -1,8 +1,6 @@
-﻿using Project;
-
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PiggyScaleApi.DTOs.UserDto;
+using PiggyScaleApi.DTOs;
 using PiggyScaleApi.Models;
 using PiggyScaleApi.Services;
 
@@ -12,20 +10,16 @@ namespace PiggyScaleApi.Controllers
     [ApiController]
     public class WeightController : ControllerBase
     {
-        private readonly WeightService _WeightService;
-        private readonly ApplicationContext _context;
-        private readonly IConfiguration _config;
+        private readonly WeightService _weightService;
 
-        public WeightController(ApplicationContext applicationContext, IConfiguration config)
+        public WeightController(ApplicationContext context)
         {
-            _context = applicationContext;
-            _config = config;
-            _WeightService = new WeightService(_context, _config);
+            _weightService = new WeightService(context);
         }
         
         [AllowAnonymous]
         [HttpGet("status")]
-        public async Task<ActionResult>  GetStatus()
+        public async Task<ActionResult> GetStatus()
         {
             return Ok(new
             {
@@ -34,17 +28,11 @@ namespace PiggyScaleApi.Controllers
         }
         
         [AllowAnonymous]
-        [HttpGet("validate/{word}")]
-        public async Task<IActionResult> CheckValidity([FromRoute] string word)
+        [HttpGet("store")]
+        public async Task<IActionResult> Store([FromBody] WeightDto weightDto)
         {
-            return Ok("hello");
-        }
-        
-        [AllowAnonymous]
-        [HttpPut("wordCalculation")]
-        public async Task<IActionResult> GetWordCalcDebug([FromBody] RegisterUserDto dto)
-        {
-            return Ok("hello");
+            await _weightService.Save(weightDto);
+            return Ok();
         }
         
     }

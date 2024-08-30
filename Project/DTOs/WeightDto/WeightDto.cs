@@ -8,32 +8,40 @@ namespace PiggyScaleApi.DTOs;
 
 public class WeightDto
 {
-    [Required]
-    public string weightName { get; set; }
-    [Required]
-    public string weightPassword { get; set; }
     
-    [JsonConstructor]
+    [Required]
+    [Column("datetime")]
+    public string dateTime { get; set; }
+    
+    [Required]
+    [Column("box")]
+    public uint boxNumber { get; set; }
+    
+    [Required]
+    [Column("weight")]
+    public float weight { get; set; }
+    
+    [Required]
+    [Column("stddev")]
+    public float stddev { get; set; }
+    
     public WeightDto(){}
-
-    public WeightDto(Weight weight)
-    {
-        weightName = weight.weightName;
-        weightPassword = weight.weightPassword;
-    }
     
-    public WeightDto(string weightName, string weightPassword)
-    {
-        this.weightName = weightName;
-        this.weightPassword = weightPassword;
-    }
-    
-    public Weight toEntity()
+    public Weight ToEntity()
     {
         Weight weight = new Weight();
-        weight.weightPassword = weightPassword;
-        weight.weightName = weightName;
-        
+        weight.dateTime = this.dateTime;
+        weight.weight = this.weight;
+        weight.stddev = this.stddev;
+        weight.boxNumber = this.boxNumber;
         return weight;
+    }
+    
+    public WeightDto(string dateTime, float weight, float stddev, uint boxNumber)
+    {
+        this.dateTime = dateTime;
+        this.boxNumber = boxNumber;
+        this.weight = weight;
+        this.stddev = stddev;
     }
 }
