@@ -16,7 +16,7 @@ namespace PiggyScaleApi.Controllers
         {
             _weightService = new WeightService(context);
         }
-        
+
         [AllowAnonymous]
         [HttpGet("status")]
         public async Task<ActionResult> GetStatus()
@@ -26,14 +26,43 @@ namespace PiggyScaleApi.Controllers
                 message = "works"
             });
         }
-        
+
         [AllowAnonymous]
-        [HttpGet("store")]
-        public async Task<IActionResult> Store([FromBody] WeightDto weightDto)
+        [HttpPost("store")]
+        public async Task<IActionResult> Store([FromBody] PostWeightDto postWeightDto)
         {
-            await _weightService.Save(weightDto);
+            await _weightService.Save(postWeightDto);
             return Ok();
         }
-        
+
+        [AllowAnonymous]
+        [HttpPost("deleteLast/{userId}")]
+        public async Task<IActionResult> Store([FromRoute] uint userId)
+        {
+            Weight weight = await _weightService.DeleteLastByUserId(userId);
+            return Ok(weight.ToDto());
+        }
+
+        [AllowAnonymous]
+        [HttpGet("box/{boxId}/{days}/{userId}")]
+        public async Task<IActionResult> Store([FromRoute] uint boxId, [FromRoute] uint days, [FromRoute] long userId)
+        {
+            return Ok(await _weightService.GetWeightsByBoxNumberAndDays(boxId, days, userId));
+        }
+
+        [AllowAnonymous]
+        [HttpGet("write")]
+        public async Task<IActionResult> WriteTestData()
+        {
+            await _weightService.GenerateTestData();
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("export/{userId}")]
+        public async Task<IActionResult> ExportAll(long userId)
+        {
+            return Ok(await _weightService.ExportAllByUserId(userId));
+        }
     }
 }

@@ -12,32 +12,28 @@ namespace PiggyScaleApi.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly ApplicationContext _context;
         private readonly UserService _userService;
-        private readonly IConfiguration _configuration;
 
         public UserController(ApplicationContext context, IConfiguration config)
         {
-            _context = context;
-            _configuration = config;
-            _userService = new UserService(_context, _configuration);
+            _userService = new UserService(context, config);
         }
         
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDto userDTO)
+        public async Task<IActionResult> Register([FromBody] RegisterUserDto userDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("The format of the credentials are not valid");
             }
-            if (await _userService.UserExistsByUserName(userDTO.userName))
+            if (await _userService.UserExistsByUserName(userDto.userName))
             {
                 return BadRequest("Username is already taken, please choose another one");
             }
 
-            User user = await _userService.CreateUser(userDTO);
-            return CreatedAtAction(nameof(Register), new {token = _userService.GenerateToken(userDTO), id = user.userId }); 
+            User user = await _userService.CreateUser(userDto);
+            return CreatedAtAction(nameof(Register), new {token = _userService.GenerateToken(userDto), id = user.userId }); 
         }
         
         [HttpPost("login")]

@@ -19,7 +19,7 @@ public class Weight
     
     [Required]
     [Column("box")]
-    public uint boxNumber { get; set; }
+    public long boxNumber { get; set; }
     
     [Required]
     [Column("weight")]
@@ -29,24 +29,30 @@ public class Weight
     [Column("stddev")]
     public float stddev { get; set; }
     
+    [Required]
+    [Column("userid")]
+    public long userId { get; set; }
+    
     public Weight(){}
     
-    public Weight(long weightId, string dateTime, float weight, float stddev, uint boxNumber)
+    public Weight(long weightId, string dateTime, float weight, float stddev, long boxNumber, long userId)
     {
         this.weightId = weightId;
         this.dateTime = dateTime;
         this.boxNumber = boxNumber;
         this.weight = weight;
         this.stddev = stddev;
+        this.userId = userId;
     }
 
-    public WeightDto ToDto(Weight weightObj)
+    public GetWeightDto ToDto()
     {
-        WeightDto weightDto = new WeightDto();
-        weightDto.weight = weightObj.weight;
-        weightDto.stddev = weightObj.stddev;
-        weightDto.dateTime = weightObj.dateTime;
-        weightDto.boxNumber = weightObj.boxNumber;
-        return weightDto;
+        GetWeightDto getWeightDto = new GetWeightDto();
+        getWeightDto.weight = this.weight;
+        getWeightDto.stddev = this.stddev;
+        getWeightDto.dateTime = this.dateTime;
+        getWeightDto.boxNumber = this.boxNumber;
+        getWeightDto.userId = this.userId;
+        return getWeightDto;
     }
 }

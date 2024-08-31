@@ -1,21 +1,19 @@
-﻿
+﻿using System.Globalization;
+
+namespace PiggyScaleApi.DTOs;
+
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 using PiggyScaleApi.Models;
 
-namespace PiggyScaleApi.DTOs;
 
-public class WeightDto
+public class PostWeightDto
 {
     
     [Required]
-    [Column("datetime")]
-    public string dateTime { get; set; }
-    
-    [Required]
     [Column("box")]
-    public uint boxNumber { get; set; }
+    public long boxNumber { get; set; }
     
     [Required]
     [Column("weight")]
@@ -25,23 +23,29 @@ public class WeightDto
     [Column("stddev")]
     public float stddev { get; set; }
     
-    public WeightDto(){}
+    [Required]
+    [Column("userid")]
+    public long userId { get; set; }
     
-    public Weight ToEntity()
+    public PostWeightDto(){}
+    
+    public Weight ToEntity(string _dateTime, long _weightId)
     {
         Weight weight = new Weight();
-        weight.dateTime = this.dateTime;
+        weight.dateTime = _dateTime;
         weight.weight = this.weight;
         weight.stddev = this.stddev;
         weight.boxNumber = this.boxNumber;
+        weight.userId = this.userId;
+        weight.weightId = _weightId;
         return weight;
     }
     
-    public WeightDto(string dateTime, float weight, float stddev, uint boxNumber)
+    public PostWeightDto(float weight, float stddev, long boxNumber, long userId)
     {
-        this.dateTime = dateTime;
         this.boxNumber = boxNumber;
         this.weight = weight;
         this.stddev = stddev;
+        this.userId = userId;
     }
 }
