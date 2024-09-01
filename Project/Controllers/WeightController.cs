@@ -44,7 +44,7 @@ namespace PiggyScaleApi.Controllers
         }
 
         [Authorize]
-        [HttpPost("deleteLast/{userId}")]
+        [HttpPost("deleteLast")]
         public async Task<IActionResult> Store()
         {
             User? claimUser = await _userService.VerifyUser(HttpContext.User);
