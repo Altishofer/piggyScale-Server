@@ -11,9 +11,11 @@ namespace PiggyScaleApi.Controllers
     public class WeightController : ControllerBase
     {
         private readonly WeightService _weightService;
+        private readonly UserService _userService;
 
-        public WeightController(ApplicationContext context)
+        public WeightController(ApplicationContext context, IConfiguration config)
         {
+            _userService = new UserService(context, config);
             _weightService = new WeightService(context);
         }
 
@@ -27,27 +29,45 @@ namespace PiggyScaleApi.Controllers
             });
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPost("store")]
         public async Task<IActionResult> Store([FromBody] PostWeightDto postWeightDto)
         {
-            await _weightService.Save(postWeightDto);
+            User? claimUser = await _userService.VerifyUser(HttpContext.User);
+            if (claimUser == null)
+            {
+                return Unauthorized("The token could not be validated");
+            }
+            
+            await _weightService.Save(postWeightDto, claimUser.userId);
             return Ok();
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPost("deleteLast/{userId}")]
-        public async Task<IActionResult> Store([FromRoute] uint userId)
+        public async Task<IActionResult> Store()
         {
-            Weight weight = await _weightService.DeleteLastByUserId(userId);
+            User? claimUser = await _userService.VerifyUser(HttpContext.User);
+            if (claimUser == null)
+            {
+                return Unauthorized("The token could not be validated");
+            }
+            
+            Weight weight = await _weightService.DeleteLastByUserId(claimUser.userId);
             return Ok(weight.ToDto());
         }
 
-        [AllowAnonymous]
-        [HttpGet("box/{boxId}/{days}/{userId}")]
-        public async Task<IActionResult> Store([FromRoute] uint boxId, [FromRoute] uint days, [FromRoute] long userId)
+        [Authorize]
+        [HttpGet("box/{boxId}/{days}")]
+        public async Task<IActionResult> Store([FromRoute] uint boxId, [FromRoute] uint days)
         {
-            return Ok(await _weightService.GetWeightsByBoxNumberAndDays(boxId, days, userId));
+            User? claimUser = await _userService.VerifyUser(HttpContext.User);
+            if (claimUser == null)
+            {
+                return Unauthorized("The token could not be validated");
+            }
+            
+            return Ok(await _weightService.GetWeightsByBoxNumberAndDays(boxId, days, claimUser.userId));
         }
 
         [AllowAnonymous]
@@ -58,11 +78,17 @@ namespace PiggyScaleApi.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
-        [HttpGet("export/{userId}")]
-        public async Task<IActionResult> ExportAll(long userId)
+        [Authorize]
+        [HttpGet("export")]
+        public async Task<IActionResult> ExportAll()
         {
-            return Ok(await _weightService.ExportAllByUserId(userId));
+            User? claimUser = await _userService.VerifyUser(HttpContext.User);
+            if (claimUser == null)
+            {
+                return Unauthorized("The token could not be validated");
+            }
+            
+            return Ok(await _weightService.ExportAllByUserId(claimUser.userId));
         }
     }
 }

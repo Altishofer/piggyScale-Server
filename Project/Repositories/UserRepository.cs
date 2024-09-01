@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PiggyScaleApi.Models;
 using User = PiggyScaleApi.Models.User;
 
@@ -20,6 +16,13 @@ public class UserRepository
     public void DeleteUser(User User)
     {
         _context.Remove(User);
+    }
+    
+    public async Task<int> DeleteAll()
+    {
+        List<User> allUsers = await _context.User.ToListAsync();
+        _context.User.RemoveRange(allUsers);
+        return await _context.SaveChangesAsync();
     }
 
     public async Task<List<User>> GetAllUsers()

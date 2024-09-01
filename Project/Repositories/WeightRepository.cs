@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using PiggyScaleApi.Models;
 using Weight = PiggyScaleApi.Models.Weight;
@@ -49,7 +43,7 @@ public class WeightRepository
         return weight;
     }
     
-    public async Task<Weight> DeleteLastByUserId(uint userId)
+    public async Task<Weight> DeleteLastByUserId(long userId)
     {
         Weight? weight = await _context.Weight.Where(w => w.userId == userId).OrderByDescending(w => w.weightId).FirstOrDefaultAsync();
         if (weight != null)

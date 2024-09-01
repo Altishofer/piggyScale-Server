@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using Microsoft.AspNetCore.Mvc;
 using PiggyScaleApi.DTOs;
 using PiggyScaleApi.Repositories;
 
@@ -17,11 +16,11 @@ public class WeightService
         _weightRepository = new WeightRepository(context);
     }
     
-    public async Task<Weight> Save(PostWeightDto postWeightDto)
+    public async Task<Weight> Save(PostWeightDto postWeightDto, long userId)
     {
         string dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
         long weightId = await _weightRepository.NextWeightId();
-        Weight weight = postWeightDto.ToEntity(dateTime, weightId);
+        Weight weight = postWeightDto.ToEntity(dateTime, weightId, userId);
         return await _weightRepository.SaveWeight(weight);
     }
     
@@ -35,8 +34,7 @@ public class WeightService
         return await _weightRepository.DeleteWeight(weight);
     }
     
-    
-    public async Task<Weight> DeleteLastByUserId(uint userId)
+    public async Task<Weight> DeleteLastByUserId(long userId)
     {
         return await _weightRepository.DeleteLastByUserId(userId);
     }
@@ -67,9 +65,9 @@ public class WeightService
                     DateTime dateTime = DateTime.Now.AddDays(-delta);
                     string dateTimeStr = dateTime.ToString("yyyy.MM.dd HH:mm:ss", CultureInfo.InvariantCulture);
                     long weightId = await _weightRepository.NextWeightId();
-                    PostWeightDto postWeightDto = new PostWeightDto(weightValue, (float)stddev, box, userId);
+                    PostWeightDto postWeightDto = new PostWeightDto(weightValue, (float)stddev, box);
 
-                    await _weightRepository.SaveWeight(postWeightDto.ToEntity(dateTimeStr, weightId));
+                    await _weightRepository.SaveWeight(postWeightDto.ToEntity(dateTimeStr, weightId, userId));
                 }
             }
         }

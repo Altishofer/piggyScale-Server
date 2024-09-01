@@ -54,6 +54,21 @@ namespace PiggyScaleApi.Controllers
             return Ok(new {token = _userService.GenerateToken(userDto), id = authUser.userId});
         }
         
+        [HttpPost("getAllUsers")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            return Ok(_userService.GetAllUsers());
+        }
+        
+        [HttpPost("reset")]
+        [AllowAnonymous]
+        public async Task<IActionResult> DeleteAll()
+        {
+            await _userService.DeleteAll();
+            return Ok("All Users were deleted");
+        }
+        
         [HttpGet("refresh-token")]
         [Authorize]
         public async Task<IActionResult> RefreshToken()

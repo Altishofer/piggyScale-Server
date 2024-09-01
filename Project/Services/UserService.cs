@@ -80,6 +80,11 @@ public class UserService
         _userRepository.DeleteUser(user);
     }
     
+    public async Task<int> DeleteAll()
+    {
+        return await _userRepository.DeleteAll();
+    }
+    
     public async Task<string> GenerateToken(RegisterUserDto registerUserDto)
     {
         JwtSecurityTokenHandler jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
