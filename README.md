@@ -1,4 +1,7 @@
 ![db-sqlite3](https://img.shields.io/badge/db--sqlite3-0.0.1-yellow)
+![dotnet](https://img.shields.io/badge/.NET-7.0-blue)
+![csharp](https://img.shields.io/badge/C%23-10.0-purple)
+![swagger](https://img.shields.io/badge/Swagger-6.2.3-green)
 
 # Piggy Scale Server: 
 🎉 Real-Time Scale and Weight Analytics 🎉
@@ -22,11 +25,12 @@ This repository contains all three components of the Piggy Scale system. The Sca
 
 ## Built With
 
-- **[SQLite3](https://sqlite.org/index.html):** A python library for manipulating lightweight open source database files.
-- ASP .NET Core
-- Swagger
+- **[SQLite3](https://sqlite.org/index.html):** A library for manipulating lightweight open-source database files.
+- **[ASP.NET Core](https://dotnet.microsoft.com/apps/aspnet):** A cross-platform framework for building modern cloud-based web applications.
+- **[Swagger](https://swagger.io/):** A toolset for designing, building, documenting, and consuming RESTful web services.
 - **[Mosquitto](https://mosquitto.org/):** An open-source message broker that implements the MQTT protocol.
-- C#
+- **[C#](https://docs.microsoft.com/en-us/dotnet/csharp/):** The primary programming language used in the .NET ecosystem.
+
 
 ## Main Components
 
