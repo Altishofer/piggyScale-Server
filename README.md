@@ -66,14 +66,18 @@ This repository contains all three components of the Piggy Scale system. The Sca
   ```shell
   cd piggyScale-Server/Project
   ```
-3. Execute Predefined Launch Profile
+3. Create empty database file
+  ```shell
+  touch ./LocalDatabase/localdb.sqlite
+  ```
+4. Execute Predefined Launch Profile
  ```console
  dotnet run --launch-profile Production
  ```
-4. Open UI in your favorite browser
+5. Open UI in your favorite browser
 [http://localhost:59331/api/Weight/status](http://localhost:59331/api/Weight/status)
 
-5. Open Swagger UI in your favorite browser
+6. Open Swagger UI in your favorite browser
 [http://localhost:59331/api/Weight/status](http://localhost:59331/swagger/index.html)
  
 
@@ -143,7 +147,7 @@ Add all script to autostart (optional)
  ```console
 cd /home/pi/Desktop && nano startAll.sh
  ```
-3. Insert Deployment code into bash file
+4. Insert Deployment code into bash file
 ```console
 #!/bin/bash
 
