@@ -54,8 +54,7 @@ This repository contains all three components of the Piggy Scale system. The Sca
 ### Deployment - REST-Server & Scale
 
 #### Software Prerequisites
-- [ASP .NET]()
-- Yarn
+- [ASP .NET](https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-8.0&tabs=visual-studio-code)
 
 #### Setup
 
